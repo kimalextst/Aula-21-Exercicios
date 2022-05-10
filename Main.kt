@@ -1,13 +1,8 @@
-package exercicio3
+package exercicio4
 
 fun main(){
     val objetoCadastro : Cadastro = Cadastro()
-    val objetoTestDrive : TestDrive = TestDrive()
 
-    objetoCadastro.pegarMarca()
-    objetoCadastro.mostrarInfo()
-    objetoCadastro.testDrive(objetoTestDrive)
-
-    objetoTestDrive.iniciar()
-    objetoTestDrive.dirigir()
+    objetoCadastro.introducao()
+    objetoCadastro.criarConta()
 }

@@ -1,88 +1,102 @@
-package exercicio3
+package exercicio4
 
 import kotlin.system.exitProcess
 
 class Cadastro {
-    private var marca : String = ""
+    private lateinit var conta : String
+    private lateinit var nome : String
+    private var saldo : Double = 0.0
+    private lateinit var objetoConta : Conta
+    private lateinit var objetoOperacoes : Operacoes
 
-    fun pegarMarca(): String {
-        println("----------------------------------------------------")
-        println("Qual a marca do carro?")
-        println("[F] Fiat")
-        println("[H] Hyundai")
-        println("[R] Renault")
-        println("----------------------------------------------------")
-        marca = readln()
-
-        if (marca != "F" && marca != "H" && marca != "R") {
-            println("Escolha Inválida. Tente novamente.")
-            pegarMarca()
-        }
-
-        return marca
-    }
-
-    private fun pegarAno(): String {
-        println("----------------------------------------------------")
-        println("Qual o ano do carro?")
-        return readln()
-    }
-
-    private fun pegarCor(): String {
-        println("----------------------------------------------------")
-        println("Qual a cor do carro?")
-        return readln()
-    }
-
-    private fun pegarPortas(): String {
-        println("----------------------------------------------------")
-        println("O carro possui [2] duas ou [4] quatro portas?")
-        val escolha = readln()
-
-        if (escolha != "2" && escolha != "4") {
-            println("Escolha Inválida. Tente novamente.")
-            pegarPortas()
-        }
-
-        return escolha
-    }
-
-    private fun pegarValor(): String {
-        println("----------------------------------------------------")
-        println("Qual o valor do carro?")
-        print("R$")
-        return readln()
-    }
-
-    fun mostrarInfo() {
-        val objetoCarro : Carro = Carro()
-
-        println("----------------------------------------------------")
-        when(marca){
-            "F" -> objetoCarro.mostrarInfoCarro("FIAT", pegarAno(), pegarCor(), pegarPortas(), pegarValor())
-            "H" -> objetoCarro.mostrarInfoCarro("HYUNDAI", pegarAno(), pegarCor(), pegarPortas(), pegarValor())
-            "R" -> objetoCarro.mostrarInfoCarro("RENAULT", pegarAno(), pegarCor(), pegarPortas(), pegarValor())
-        }
+    fun introducao(){
+        println("Olá, bem vinde!")
+        pegarNome()
+        println("Prazer, $nome. Vamos iniciar a criação de conta")
         println("----------------------------------------------------")
     }
 
-    fun testDrive(objetoTestDrive: TestDrive) {
-        println("----------------------------------------------------")
-        println("Deseja fazer um TestDrive virtual? ([S] Sim // [N] Não)")
-        val escolha = readln()
-
-        when (escolha) {
+    fun criarConta(){
+        pegarTipoConta()
+        when (conta) {
+            "C" -> {
+                saldoInicial()
+            }
+            "P" -> {
+                saldo = 0.0
+            }
             "S" -> {
-                objetoTestDrive.introducao()
-                objetoTestDrive.carroEscolhido(marca)
+                saldo = 1212.0
             }
-            "N" -> {
-                exitProcess(0)
+        }
+
+        verificacaoObjeto()
+        verificacaoOperacoes()
+    }
+
+    private fun saldoInicial(){
+        println("----------------------------------------------------")
+        println("Insira o valor do saldo inicial")
+        print("R$")
+        saldo = readln().toDouble()
+    }
+
+    private fun pegarTipoConta() {
+        println("----------------------------------------------------")
+        println("Qual tipo de conta deseja criar?")
+        println("[C] Corrente")
+        println("[P] Poupança")
+        println("[S] Salário")
+        println("----------------------------------------------------")
+        conta = readln()
+
+        if (conta != "C" && conta != "P" && conta != "S"){
+            println("Escolha inválida, tente novamente")
+            pegarTipoConta()
+        }
+    }
+
+    private fun pegarNome(){
+        println("----------------------------------------------------")
+        println("Qual o seu nome?")
+        println("------------------")
+        nome = readln()
+        println("----------------------------------------------------")
+    }
+
+    private fun verificacaoObjeto() {
+        when (conta) {
+            "C" -> objetoConta = ContaCorrente(saldoAtual = saldo)
+            "P" -> objetoConta = ContaPoupanca(saldoAtual = saldo)
+            "S" -> objetoConta = ContaSalario(saldoAtual = saldo, nome = nome)
+        }
+        objetoOperacoes = Operacoes(objetoConta)
+    }
+
+    fun verificacaoOperacoes(){
+        println("----------------------------------------------------")
+        println("Deseja realizar alguma operação?")
+        println("----------------------------------------------------")
+        println("1 - Saque // 2 - Deposito // 3 - Sair")
+        println("----------------------------------------------------")
+        val escolha = readln().toInt()
+
+        when (escolha){
+            1 -> {
+                objetoOperacoes.operacao(1)
+                verificacaoOperacoes()
             }
+            2 -> {
+                objetoOperacoes.operacao(2)
+                verificacaoOperacoes()
+            }
+            3 -> exitProcess(0)
             else -> {
-                println("Escolha Inválida. Tente novamente.")
-                testDrive(objetoTestDrive)
+                println("Escolha Inválida.")
+                verificacaoOperacoes()
             }
         }
     }
+
+
 }
